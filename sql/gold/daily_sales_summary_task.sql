@@ -10,6 +10,10 @@ USING (
         COUNT(order_id) AS total_orders
     FROM
         silver.stg_sales
+    JOIN
+        silver.stg_customers
+    ON
+        silver.stg_sales.customer_id = silver.stg_customers.customer_id
     WHERE
         sale_date = CURRENT_DATE() -- Assuming daily run
     GROUP BY
