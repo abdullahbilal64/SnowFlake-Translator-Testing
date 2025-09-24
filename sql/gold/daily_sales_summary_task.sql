@@ -4,19 +4,40 @@ AFTER silver.process_stg_sales -- Define dependency on the silver task
 AS
 MERGE INTO gold.daily_sales_summary AS target
 USING (
+    WITH active_customers AS (
+        SELECT 
+            customer_id,
+            first_name,
+            last_name,
+            email,
+            customer_status
+        FROM silver.stg_customers
+        WHERE customer_status = 'ACTIVE'
+    ),
+    
+    current_date_sales AS (
+        SELECT 
+            sale_date,
+            customer_id,
+            order_id,
+            price
+        FROM silver.stg_sales
+        WHERE sale_date = CURRENT_DATE()
+    )
+    
     SELECT
         sale_date,
         SUM(price) AS total_revenue,
         COUNT(order_id) AS total_orders
     FROM
-        silver.stg_sales
+        current_date_sales
     JOIN
-        silver.stg_customers
+        active_customers
     ON
-        silver.stg_sales.customer_id = silver.stg_customers.customer_id
+        current_date_sales.customer_id = active_customers.customer_id
     WHERE
         sale_date = CURRENT_DATE() -- Assuming daily run
-        AND silver.stg_customers.customer_status = 'ACTIVE'
+        AND active_customers.customer_status = 'ACTIVE'
     GROUP BY
         sale_date
     HAVING
