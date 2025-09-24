@@ -16,6 +16,7 @@ USING (
         silver.stg_sales.customer_id = silver.stg_customers.customer_id
     WHERE
         sale_date = CURRENT_DATE() -- Assuming daily run
+        AND silver.stg_customers.customer_status = 'ACTIVE'
     GROUP BY
         sale_date
 ) AS source ON target.sale_date = source.sale_date
