@@ -26,11 +26,11 @@ USING (
     )
     
     SELECT
-        sale_date,
-        SUM(price) AS total_revenue,
-        COUNT(order_id) AS total_orders
+        cs.sale_date,
+        SUM(cs.price) AS total_revenue,
+        COUNT(cs.order_id) AS total_orders
     FROM
-        current_date_sales
+        current_date_sales as cs
     JOIN
         active_customers
     ON
