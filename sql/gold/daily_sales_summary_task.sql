@@ -22,6 +22,9 @@ USING (
     HAVING
         SUM(price) > 0
         AND COUNT(order_id) > 0
+    ORDER BY
+        sale_date DESC
+    LIMIT 100
 ) AS source ON target.sale_date = source.sale_date
 WHEN MATCHED THEN UPDATE SET
     target.total_revenue = source.total_revenue,
