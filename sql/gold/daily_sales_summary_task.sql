@@ -19,6 +19,9 @@ USING (
         AND silver.stg_customers.customer_status = 'ACTIVE'
     GROUP BY
         sale_date
+    HAVING
+        SUM(price) > 0
+        AND COUNT(order_id) > 0
 ) AS source ON target.sale_date = source.sale_date
 WHEN MATCHED THEN UPDATE SET
     target.total_revenue = source.total_revenue,
