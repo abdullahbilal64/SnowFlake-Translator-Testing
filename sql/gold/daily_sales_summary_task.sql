@@ -35,9 +35,13 @@ USING (
         active_customers
     ON
         current_date_sales.customer_id = active_customers.customer_id
+    JOIN
+        silver.stg_customers
+    ON
+        current_date_sales.customer_id = silver.stg_customers.customer_id
     WHERE
         sale_date = CURRENT_DATE() -- Assuming daily run
-        AND active_customers.customer_status = 'ACTIVE'
+        AND silver.stg_customers.customer_status = 'ACTIVE'
     GROUP BY
         sale_date
     HAVING
