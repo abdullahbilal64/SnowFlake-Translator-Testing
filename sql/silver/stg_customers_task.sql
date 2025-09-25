@@ -2,7 +2,7 @@ CREATE OR REPLACE TASK silver.process_stg_customers
     WAREHOUSE = 'COMPUTE_WH'
     SCHEDULE = '5 MINUTE'
 AS
-INSERT INTO silver.stg_customers (
+INSERT INTO silver.stg_customers AS sc (
     customer_id,
     first_name,
     last_name,
